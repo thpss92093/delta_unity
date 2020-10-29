@@ -58,3 +58,9 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Ignoring directories
+# Both the directory itself and its contents will be ignored.
+Images/
+
+
+
