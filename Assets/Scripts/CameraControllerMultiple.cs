@@ -131,12 +131,15 @@ public class CameraControllerMultiple : MonoBehaviour {
 
                 //json_file = new JsonFile();
                 json_file.get_cam(renderCam);
-                //json_file.get_obj(1, cloneObj, renderCam);
+                json_file.get_obj(1, cloneObj, renderCam);
 
                 //json_file.get_file();
 
                 //json_file.get_obj(objNumber, cloneObj, renderCam);
                 string convertToJson = JsonUtility.ToJson(json_file, true);
+                convertToJson = convertToJson.Replace("_class", "class");
+                convertToJson = convertToJson.Replace("(Clone)", "");
+
                 Debug.Log(convertToJson);
                 System.IO.File.WriteAllText( sceneName+ "_test.json", convertToJson);
 

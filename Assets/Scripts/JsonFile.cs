@@ -63,6 +63,23 @@ public class JsonFile
             cuboid = cub;
             projected_cuboid = pc;
         }
+        public void setObjects(string cla, int vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
+        {
+            _class = cla;
+            visibility = vis;
+            location = l;
+            quaternion_xyzw = q;
+            pose_transform_permuted = ptp;
+            cuboid_centroid = cc;
+            projected_cuboid_centroid = pcc;
+            bounding_box = bb;
+            cuboid = cub;
+            projected_cuboid = pc;
+        }
+        public string get_class()
+        {
+            return _class;
+        }
     }
     [Serializable]
     public class BoundingBox
@@ -98,31 +115,47 @@ public class JsonFile
     }
     public void get_obj(int n, GameObject[] renderObj, GameObject renderCam)
     {
+        //Debug.Log("obj length: " + objects.Length);
+        //Debug.Log("renderObj length: " + renderObj.Length);
+        string cla;
+        int vis = 1;
+        Vector3 l;
+        Quaternion q;
+        Matrix4x4 ptp;
+        Vector3 cc;
+        Vector2 pcc;
+        BoundingBox bb;
+        Vector3[] cub;
+        Vector2[] pc;
+
         objects = new Objects[n];
-        Debug.Log("obj length: " + objects.Length);
-        Debug.Log("renderObj length: " + renderObj.Length);
 
         for (int i = 0; i < n; i++)
         {
-            objects[i]._class = renderObj[i].name;
-            objects[i].visibility = 1;
+            objects[i] = new Objects();
+            cla = renderObj[i].name;
             // =========== object to cam location ==============
-            objects[i].location = renderCam.transform.position - renderObj[i].transform.position;
-            Debug.Log("location1: " + objects[i].location);
-            objects[i].location = renderCam.transform.TransformPoint(renderObj[i].transform.position);
-            Debug.Log("location2: " + objects[i].location);
-            objects[i].cuboid_centroid = objects[i].location;
+            l = renderCam.transform.position - renderObj[i].transform.position;
+            Debug.Log("location1: " + l.ToString("f4"));
+            l = renderCam.transform.TransformPoint(renderObj[i].transform.position);
+            Debug.Log("location2: " + l.ToString("f4"));
+            cc = l;
             // =========== object to cam rotation ==============
-            objects[i].quaternion_xyzw = renderObj[i].transform.rotation;
+            q = renderObj[i].transform.rotation;
 
-            objects[i].pose_transform_permuted = Matrix4x4.Rotate(renderObj[i].transform.rotation);
+            ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
 
-            objects[i].projected_cuboid_centroid = renderCam.GetComponent<Camera>().WorldToScreenPoint(renderObj[i].transform.position);
-            objects[i].projected_cuboid_centroid.y = 480 - (objects[i].projected_cuboid_centroid.y - 960);
+            pcc = renderCam.GetComponent<Camera>().WorldToScreenPoint(renderObj[i].transform.position);
+            pcc.y = 480 - (pcc.y - 960);
 
-            objects[i].cuboid = getOBBox(renderObj[i]);
-            objects[i].projected_cuboid = get2DOBBox(objects[i].cuboid, renderCam);
-            objects[i].bounding_box = get2DBox(objects[i].projected_cuboid);
+            cub = getOBBox(renderObj[i]);
+            pc = get2DOBBox(cub, renderCam);
+            bb = get2DBox(pc);
+
+            Debug.Log("objects debug: " + objects.Length + ", " + objects.ToString());
+            Debug.Log("objects debug2: " + objects[0].get_class());
+
+            objects[i].setObjects(cla, vis, l, q, ptp, cc, pcc, bb, cub, pc);
         }
     }
     Vector3[] getOBBox(GameObject g)
