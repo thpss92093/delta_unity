@@ -140,7 +140,7 @@ public class CameraControllerMultiple : MonoBehaviour {
                 convertToJson = convertToJson.Replace("_class", "class");
                 convertToJson = convertToJson.Replace("(Clone)", "");
 
-                Debug.Log(convertToJson);
+                //Debug.Log(convertToJson);
                 System.IO.File.WriteAllText( sceneName+ "_test.json", convertToJson);
 
                 // capture the screenshot;
@@ -322,6 +322,7 @@ public class CameraControllerMultiple : MonoBehaviour {
         }
         // Debug.Log("chang obj color = " + renderObj.GetComponent<Renderer>().material.color);
     }
+
     private GameObject Objclone_label(GameObject obj, int id)
     {
         //GameObject labelClone = (GameObject)Instantiate(obj, obj.transform.position, obj.transform.rotation);
@@ -380,6 +381,7 @@ public class CameraControllerMultiple : MonoBehaviour {
 		byte[] bytes = tex.EncodeToPNG ();
 		File.WriteAllBytes (filename, bytes);
 	}
+
     IEnumerator ScreenShot(string filename)
     {
         yield return new WaitForEndOfFrame();
