@@ -137,11 +137,10 @@ public class CameraControllerMultiple : MonoBehaviour {
 
                 //json_file.get_obj(objNumber, cloneObj, renderCam);
                 string convertToJson = JsonUtility.ToJson(json_file, true);
-                convertToJson = convertToJson.Replace("_class", "class");
-                convertToJson = convertToJson.Replace("(Clone)", "");
+                string newconvertToJson = fixjson(convertToJson);
 
                 //Debug.Log(convertToJson);
-                System.IO.File.WriteAllText( sceneName+ "_test.json", convertToJson);
+                System.IO.File.WriteAllText( sceneName+ "_test.json", newconvertToJson);
 
                 // capture the screenshot;
                 yield return new WaitForEndOfFrame();
@@ -165,6 +164,14 @@ public class CameraControllerMultiple : MonoBehaviour {
             imageCnt = 0;
         }
         yield return null;
+    }
+
+    string fixjson(string j)
+    {
+        string s = j;
+        s = s.Replace("_class", "class");
+        s = s.Replace("(Clone)", "");
+        return j;
     }
     void drawAABBox(GameObject g)
     {
