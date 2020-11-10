@@ -171,7 +171,10 @@ public class CameraControllerMultiple : MonoBehaviour {
         string s = j;
         s = s.Replace("_class", "class");
         s = s.Replace("(Clone)", "");
-        return j;
+        s = s.Replace("remove\"", "");
+        s = s.Replace("\"remove", "");
+
+        return s;
     }
     void drawAABBox(GameObject g)
     {

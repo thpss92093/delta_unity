@@ -33,7 +33,9 @@ public class JsonFile
         public int visibility;
         public float[] location;                        // Vector3
         public float[] quaternion_xyzw;                 // Quaternion
-        public float[,] pose_transform_permuted;        // Matrix4x4         
+        // public float[,] pose_transform_permuted;        // Matrix4x4    
+        public List<string> pose_transform_permuted;        // Matrix4x4         
+
         public float[] cuboid_centroid;                 // Vector3
         public float[] projected_cuboid_centroid;       // (x,y)
         public BoundingBox bounding_box;
@@ -51,7 +53,8 @@ public class JsonFile
             visibility = 1;
             location = new float[3];
             quaternion_xyzw = new float[4];
-            pose_transform_permuted = new float[4,4];
+            // pose_transform_permuted = new float[4,4];
+            pose_transform_permuted = new List<string>();
             cuboid_centroid = new float[3];
             projected_cuboid_centroid = new float[2];
             bounding_box = new BoundingBox();
@@ -60,29 +63,42 @@ public class JsonFile
             // projected_cuboid = new float[8,2];
             projected_cuboid = new List<string>();
         }
-        string get_projected_cuboid(Vector2[] pc)
+        List<string> get_pose_transform_permuted(Matrix4x4 ptp)
         {
-            string str = "";
+            List<string> str_list = new List<string>();
+            float[] temp = new float[4] { ptp.m00, ptp.m01, ptp.m02, ptp.m03 };
+            str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
+
+            temp = new float[4] { ptp.m10, ptp.m11, ptp.m12, ptp.m13 };
+            str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
+
+            temp = new float[4] { ptp.m20, ptp.m21, ptp.m22, ptp.m23 };
+            str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
+
+            temp = new float[4] { ptp.m30, ptp.m31, ptp.m32, ptp.m33 };
+            str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
+
+            return str_list;
+        }
+        List<string> get_projected_cuboid(Vector2[] pc)
+        {
+            List<string> str_list = new List<string>();
             for (int i = 0; i < 8; i++)
             {
                 float[] temp = new float[2] { pc[i].x, pc[i].y };
-                str += "[ " + string.Join(", ", temp) + "],";
-
+                str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
             }
-            str = str.Substring(0, str.Length - 2);
-            return str;
+            return str_list;
         }
-        string get_cuboid(Vector3[] cub)
+        List<string> get_cuboid(Vector3[] cub)
         {
-            string str = "";
+            List<string> str_list = new List<string>();
             for (int i = 0; i < 8; i++)
             {
                 float[] temp = new float[3] { cub[i].x, cub[i].y, cub[i].z };
-                str += "[ " + string.Join(", ", temp) + "],";
-
+                str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
             }
-            str = str.Substring(0, str.Length - 2);
-            return str;
+            return str_list;
         }
         public Objects(string cla, int vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
         {
@@ -90,18 +106,12 @@ public class JsonFile
             visibility = vis;
             location = new float[3] { l.x, l.y, l.z };
             quaternion_xyzw = new float[4] { q.x, q.y, q.z, q.w };
-            pose_transform_permuted = new float[4, 4] { { ptp.m00, ptp.m01, ptp.m02, ptp.m03 }, { ptp.m10, ptp.m11, ptp.m12, ptp.m13 }, { ptp.m20, ptp.m21, ptp.m22, ptp.m23 }, { ptp.m30, ptp.m31, ptp.m32, ptp.m33 } };
-
+            pose_transform_permuted = get_pose_transform_permuted(ptp);
             cuboid_centroid = new float[3] { cc.x, cc.y, cc.z };
             projected_cuboid_centroid = new float[2] { pcc.x, pcc.y };
             bounding_box = bb;
-            // cuboid = new float[8, 3] { { cub[0].x, cub[0].y, cub[0].z }, { cub[1].x, cub[1].y, cub[1].z }, { cub[2].x, cub[2].y, cub[2].z }, { cub[3].x, cub[3].y, cub[3].z }, { cub[4].x, cub[4].y, cub[4].z }, { cub[5].x, cub[5].y, cub[5].z }, { cub[6].x, cub[6].y, cub[6].z }, { cub[7].x, cub[7].y, cub[7].z } };
-            //projected_cuboid = new float[8, 2] { { pc[0].x, pc[0].y }, { pc[1].x, pc[1].y }, { pc[2].x, pc[2].y }, { pc[3].x, pc[3].y }, { pc[4].x, pc[4].y }, { pc[5].x, pc[5].y }, { pc[6].x, pc[6].y }, { pc[7].x, pc[7].y } };
-            string pc_str = get_projected_cuboid(pc);
-            projected_cuboid.Add(pc_str);
-            string cub_str = get_cuboid(cub);
-            cuboid.Add(cub_str);
-
+            projected_cuboid = get_projected_cuboid(pc);
+            cuboid = get_cuboid(cub);
         }
         
         public void setObjects(string cla, int vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
@@ -110,18 +120,12 @@ public class JsonFile
             visibility = vis;
             location = new float[3] { l.x, l.y, l.z };
             quaternion_xyzw = new float[4] { q.x, q.y, q.z, q.w };
-            pose_transform_permuted = new float[4, 4] { { ptp.m00, ptp.m01, ptp.m02, ptp.m03 }, { ptp.m10, ptp.m11, ptp.m12, ptp.m13 }, { ptp.m20, ptp.m21, ptp.m22, ptp.m23 }, { ptp.m30, ptp.m31, ptp.m32, ptp.m33 } };
-
-            
+            pose_transform_permuted = get_pose_transform_permuted(ptp);
             cuboid_centroid = new float[3] { cc.x, cc.y, cc.z };
             projected_cuboid_centroid = new float[2] { pcc.x, pcc.y };
             bounding_box = bb;
-            // cuboid = new float[8, 3] { { cub[0].x, cub[0].y, cub[0].z }, { cub[1].x, cub[1].y, cub[1].z }, { cub[2].x, cub[2].y, cub[2].z }, { cub[3].x, cub[3].y, cub[3].z }, { cub[4].x, cub[4].y, cub[4].z }, { cub[5].x, cub[5].y, cub[5].z }, { cub[6].x, cub[6].y, cub[6].z }, { cub[7].x, cub[7].y, cub[7].z } };
-            //projected_cuboid = new float[8, 2] { { pc[0].x, pc[0].y }, { pc[1].x, pc[1].y }, { pc[2].x, pc[2].y }, { pc[3].x, pc[3].y }, { pc[4].x, pc[4].y }, { pc[5].x, pc[5].y }, { pc[6].x, pc[6].y }, { pc[7].x, pc[7].y } };
-            string pc_str = get_projected_cuboid(pc);
-            projected_cuboid.Add(pc_str);
-            string cub_str = get_cuboid(cub);
-            cuboid.Add(cub_str);
+            projected_cuboid = get_projected_cuboid(pc);
+            cuboid = get_cuboid(cub);
 
         }
         public string get_class()
