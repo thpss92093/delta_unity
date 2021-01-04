@@ -20,8 +20,7 @@ public class CameraControllerMultiple : MonoBehaviour {
     public GameObject renderBackground;
     ObjectController objectController;
     public Light lt;
-
-    public IniFile ini;
+    
     string dataPath;
 
     public string folderName;
@@ -73,6 +72,7 @@ public class CameraControllerMultiple : MonoBehaviour {
             cloneObj = new GameObject[objNumber];
             cloneObj_label = new GameObject[objNumber];
             JsonFile json_file = new JsonFile(objNumber);
+            
 
             for (i = 0; i < objNumber; i++)
             {
@@ -84,28 +84,17 @@ public class CameraControllerMultiple : MonoBehaviour {
                 yield return new WaitForSeconds(1.0f);
             }
 
-            string sceneName = "Images/" + folderName + "/Scene" + sceneCnt + "_";
-            System.IO.Directory.CreateDirectory("Images/" + folderName);
+            string sceneName = "Images/" + folderName + "/Scene" + sceneCnt + "/";
+            System.IO.Directory.CreateDirectory(sceneName);
+            JsonCamera jc = new JsonCamera();
+            string jc_newconvertToJson = fixjson(JsonUtility.ToJson(jc, true));
+            System.IO.File.WriteAllText(sceneName + "_camera_settings.json", jc_newconvertToJson);
+            JsonFolder jf = new JsonFolder(objNumber, cloneObj);
+            string jf_newconvertToJson = fixjson(JsonUtility.ToJson(jf, true));
+            System.IO.File.WriteAllText(sceneName + "_object_settings.json", jf_newconvertToJson);
 
             //string sceneName = "Images/Scene" + sceneCnt + "_";
 
-            //ini.Load_File()
-            ini = new IniFile();
-            ini.Load_File(dataPath + sceneName + "info.ini");
-            //Debug.Log( dataPath + sceneName + "info.ini");
-            
-            // save object information
-            ini.Create_Section("Object Information");
-            ini.Goto_Section("Object Information");
-
-            for(i = 0; i < objNumber; i++)
-            {
-                ini.Set_Vector3("Position", cloneObj[i].transform.position);
-                ini.Set_Vector3("Orientation(Euler)", cloneObj[i].transform.rotation.eulerAngles);
-            }
-                
-            //ini.Create_Section("View Information");
-            ini.Goto_Section("View Information");
 
             while (imageCnt < maximumImage)
             {
@@ -115,8 +104,8 @@ public class CameraControllerMultiple : MonoBehaviour {
                 for (i = 0; i < objNumber; i++)
                 {
                     cloneObj[i].GetComponent<Renderer>().sharedMaterial = ObjColorRandom(10, 1);
-                    drawAABBox(cloneObj[i]);
-                    drawOBBox(cloneObj[i]);
+                    // drawAABBox(cloneObj[i]);
+                    // drawOBBox(cloneObj[i]);
                 }
                 //ObjPoseRandom();
                 BackgroundRandom(renderBackground.GetComponent<Renderer>().sharedMaterial);
@@ -126,7 +115,6 @@ public class CameraControllerMultiple : MonoBehaviour {
 
                 // Debug.Log("camPos =" + camPos);
                 renderCam.transform.position = camPos;
-                ini.Set_Vector3(imageCnt.ToString(), camPos);
                 renderCam.transform.LookAt(lookPos);   // set camera look at the object
 
 
@@ -141,7 +129,7 @@ public class CameraControllerMultiple : MonoBehaviour {
                 string newconvertToJson = fixjson(convertToJson);
 
                 //Debug.Log(convertToJson);
-                System.IO.File.WriteAllText( sceneName + imageCnt + ".json", newconvertToJson);
+                System.IO.File.WriteAllText( sceneName + imageCnt + ".main.json", newconvertToJson);
 
                 // capture the screenshot;
                 yield return new WaitForEndOfFrame();
@@ -152,7 +140,6 @@ public class CameraControllerMultiple : MonoBehaviour {
                 yield return new WaitForSeconds(0.2f);
                 
             }
-            //ini.SaveTo(dataPath + sceneName + "info.ini");
             for (i = 0; i < objNumber; i++)
             {
                 Destroy(cloneObj[i]);
@@ -405,7 +392,7 @@ public class CameraControllerMultiple : MonoBehaviour {
         Color[] pix = entireScreen.GetPixels(0, Screen.height / 3 * 2, Screen.width, Screen.height / 3);
         original.SetPixels(pix);
         original.Apply();
-        texToPNG(filename + "_original.png", original);
+        texToPNG(filename + ".main.jpg", original);
         Destroy(original);
 
         // get depth
@@ -413,7 +400,7 @@ public class CameraControllerMultiple : MonoBehaviour {
         pix = entireScreen.GetPixels(0, 0, Screen.width, Screen.height / 3);
         depth.SetPixels(pix);
         depth.Apply();
-        texToPNG(filename + "_depth.png", depth);
+        texToPNG(filename + ".main.depth.png", depth);
         Destroy(depth);
 
         //get seg
@@ -434,7 +421,7 @@ public class CameraControllerMultiple : MonoBehaviour {
         }
         seg.SetPixels(pix);
         seg.Apply();
-        texToPNG(filename + "_seg.png", seg);
+        texToPNG(filename + ".main.seg.png", seg);
         Destroy(seg);
 
         Destroy(entireScreen);
