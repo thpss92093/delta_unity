@@ -33,34 +33,24 @@ public class JsonFile
         public int visibility;
         public float[] location;                        // Vector3
         public float[] quaternion_xyzw;                 // Quaternion
-        // public float[,] pose_transform_permuted;        // Matrix4x4    
         public List<string> pose_transform_permuted;        // Matrix4x4         
-
         public float[] cuboid_centroid;                 // Vector3
         public float[] projected_cuboid_centroid;       // (x,y)
         public BoundingBox bounding_box;
-        // public float[,] cuboid;                      // Vector3 []
         public List<string> cuboid;                     // Vector3 [] 
-
-        // public float[,] projected_cuboid;            // Vector2 [] (x,y)
         public List<string> projected_cuboid;           // Vector2 [] (x,y)
-
-
-
+        
         public Objects()
         {
             _class = " ";
             visibility = 1;
             location = new float[3];
             quaternion_xyzw = new float[4];
-            // pose_transform_permuted = new float[4,4];
             pose_transform_permuted = new List<string>();
             cuboid_centroid = new float[3];
             projected_cuboid_centroid = new float[2];
             bounding_box = new BoundingBox();
-            // cuboid = new float[8,3];
             cuboid = new List<string>();
-            // projected_cuboid = new float[8,2];
             projected_cuboid = new List<string>();
         }
         List<string> get_pose_transform_permuted(Matrix4x4 ptp)
@@ -83,9 +73,10 @@ public class JsonFile
         List<string> get_projected_cuboid(Vector2[] pc)
         {
             List<string> str_list = new List<string>();
+            float[] temp;
             for (int i = 0; i < 8; i++)
             {
-                float[] temp = new float[2] { pc[i].x, pc[i].y };
+                temp = new float[2] { pc[i].x, pc[i].y };
                 str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
             }
             return str_list;
@@ -93,9 +84,10 @@ public class JsonFile
         List<string> get_cuboid(Vector3[] cub)
         {
             List<string> str_list = new List<string>();
+            float[] temp;
             for (int i = 0; i < 8; i++)
             {
-                float[] temp = new float[3] { cub[i].x, cub[i].y, cub[i].z };
+                temp = new float[3] { cub[i].x, cub[i].y, cub[i].z };
                 str_list.Add("remove[ " + string.Join(", ", temp) + " ]remove");
             }
             return str_list;
@@ -126,7 +118,6 @@ public class JsonFile
             bounding_box = bb;
             projected_cuboid = get_projected_cuboid(pc);
             cuboid = get_cuboid(cub);
-
         }
         public string get_class()
         {
@@ -146,8 +137,8 @@ public class JsonFile
         }
         public BoundingBox(Vector2 tl, Vector2 br)
         {
-            top_left = new float[2] { tl.x, tl.y };
-            bottom_right = new float[2] { br.x, br.y };
+            top_left = new float[2] { tl.y, tl.x };
+            bottom_right = new float[2] { br.y, br.x };
         }
     }
 
@@ -161,7 +152,7 @@ public class JsonFile
 
     public void get_cam(GameObject renderCam)
     {
-        camera_data.location_worldframe = new float[3] { renderCam.transform.position.x, renderCam.transform.position.y, renderCam.transform.position.z };
+        camera_data.location_worldframe = new float[3] { renderCam.transform.position.x * 100.0f, renderCam.transform.position.y * 100.0f, renderCam.transform.position.z * 100.0f };
         camera_data.quaternion_xyzw_worldframe = new float[4] { renderCam.transform.rotation.x, renderCam.transform.rotation.y, renderCam.transform.rotation.z, renderCam.transform.rotation.w };
     }
     public void get_obj(int n, GameObject[] renderObj, GameObject renderCam)
@@ -186,10 +177,8 @@ public class JsonFile
             objects[i] = new Objects();
             cla = renderObj[i].name;
             // =========== object to cam location ==============
-            l = renderCam.transform.position - renderObj[i].transform.position;
-            //Debug.Log("location1: " + l.ToString("f4"));
-            l = renderCam.transform.TransformPoint(renderObj[i].transform.position);
-            //Debug.Log("location2: " + l.ToString("f4"));
+            // l = renderCam.transform.position - renderObj[i].transform.position;
+            l = renderCam.transform.TransformPoint(renderObj[i].transform.position) * 100.0f;
             cc = l;
             // =========== object to cam rotation ==============
             q = renderObj[i].transform.rotation;
@@ -203,7 +192,6 @@ public class JsonFile
             pc = get2DOBBox(cub, renderCam);
             bb = get2DBox(pc);
             
-
             objects[i].setObjects(cla, vis, l, q, ptp, cc, pcc, bb, cub, pc);
         }
     }
@@ -211,23 +199,24 @@ public class JsonFile
     {
         BoxCollider bc = g.GetComponent<BoxCollider>();
         Vector3[] pt = new Vector3[8];
-        pt[0] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, bc.size.z) * 0.5f);
-        pt[1] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, bc.size.z) * 0.5f);
-        pt[2] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, bc.size.z) * 0.5f);
-        pt[3] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, bc.size.z) * 0.5f);
-        pt[4] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, -bc.size.z) * 0.5f);
-        pt[5] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, -bc.size.z) * 0.5f);
-        pt[6] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, -bc.size.z) * 0.5f);
-        pt[7] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, -bc.size.z) * 0.5f);
+        pt[0] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[1] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[2] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[3] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[4] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[5] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[6] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[7] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
 
         return pt;
     }
     Vector2[] get2DOBBox(Vector3[] v3, GameObject renderCam)
     {
         Vector2[] v2 = new Vector2[8];
+        // Vector2 pos = RectTransformUtility.WorldToScreenPoint(Camera.main, target.transform.position);
         for (int i = 0; i < v3.Length; i++)
         {
-            renderCam.GetComponent<Camera>().WorldToScreenPoint(v3[i]);
+            v2[i] = renderCam.GetComponent<Camera>().WorldToScreenPoint(v3[i] / 100.0f);
             v2[i].y = 480 - (v2[i].y - 960);
         }
         return v2;

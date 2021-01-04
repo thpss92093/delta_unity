@@ -86,8 +86,9 @@ public class CameraControllerMultiple : MonoBehaviour {
 
             string sceneName = "Images/" + folderName + "/Scene" + sceneCnt + "_";
             System.IO.Directory.CreateDirectory("Images/" + folderName);
+
             //string sceneName = "Images/Scene" + sceneCnt + "_";
-            
+
             //ini.Load_File()
             ini = new IniFile();
             ini.Load_File(dataPath + sceneName + "info.ini");
@@ -140,7 +141,7 @@ public class CameraControllerMultiple : MonoBehaviour {
                 string newconvertToJson = fixjson(convertToJson);
 
                 //Debug.Log(convertToJson);
-                System.IO.File.WriteAllText( sceneName+ "_test.json", newconvertToJson);
+                System.IO.File.WriteAllText( sceneName + imageCnt + ".json", newconvertToJson);
 
                 // capture the screenshot;
                 yield return new WaitForEndOfFrame();
