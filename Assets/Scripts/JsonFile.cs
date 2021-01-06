@@ -30,7 +30,7 @@ public class JsonFile
     public class Objects
     {
         public string _class;
-        public int visibility;
+        public float visibility;
         public float[] location;                        // Vector3
         public float[] quaternion_xyzw;                 // Quaternion
         public List<string> pose_transform_permuted;        // Matrix4x4         
@@ -43,7 +43,7 @@ public class JsonFile
         public Objects()
         {
             _class = " ";
-            visibility = 1;
+            visibility = 1.0f;
             location = new float[3];
             quaternion_xyzw = new float[4];
             pose_transform_permuted = new List<string>();
@@ -92,7 +92,7 @@ public class JsonFile
             }
             return str_list;
         }
-        public Objects(string cla, int vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
+        public Objects(string cla, float vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
         {
             _class = cla;
             visibility = vis;
@@ -106,7 +106,7 @@ public class JsonFile
             cuboid = get_cuboid(cub);
         }
         
-        public void setObjects(string cla, int vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
+        public void setObjects(string cla, float vis, Vector3 l, Quaternion q, Matrix4x4 ptp, Vector3 cc, Vector2 pcc, BoundingBox bb, Vector3[] cub, Vector2[] pc)
         {
             _class = cla;
             visibility = vis;
@@ -160,7 +160,7 @@ public class JsonFile
         //Debug.Log("obj length: " + objects.Length);
         //Debug.Log("renderObj length: " + renderObj.Length);
         string cla;
-        int vis = 1;
+        float vis = 1.0f;
         Vector3 l;
         Quaternion q;
         Matrix4x4 ptp;
@@ -191,9 +191,35 @@ public class JsonFile
             cub = getOBBox(renderObj[i]);
             pc = get2DOBBox(cub, renderCam);
             bb = get2DBox(pc);
-            
+            vis = getvisibility(bb);
+
             objects[i].setObjects(cla, vis, l, q, ptp, cc, pcc, bb, cub, pc);
         }
+    }
+    float getvisibility(BoundingBox box)
+    {
+        float minx = box.top_left[1];
+        float miny = box.top_left[0];
+        float maxx = box.bottom_right[1];
+        float maxy = box.bottom_right[0];
+
+        if (minx >= 0.0f && miny >= 0.0f && maxx <= 640.0f && maxy <= 480.0f)
+            return 1.0f;
+        if (minx >= 640.0f || miny >= 480.0f || maxx <= 0.0f || maxy <= 0.0f)
+            return 0.0f;
+
+        float area;
+        area = (maxy - miny) * (maxx - minx);
+
+        if (minx < 0.0f)
+            minx = 0.0f;
+        if (miny < 0.0f)
+            miny = 0.0f;
+        if (maxx > 640.0f)
+            maxx = 640.0f;
+        if (maxy > 480.0f)
+            maxy = 480.0f;
+        return ((maxy - miny) * (maxx - minx) / area);
     }
     Vector3[] getOBBox(GameObject g)
     {
@@ -221,7 +247,6 @@ public class JsonFile
         }
         return v2;
     }
-
     BoundingBox get2DBox(Vector2[] box)
     {
         BoundingBox bb_temp = new BoundingBox();
