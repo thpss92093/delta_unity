@@ -111,7 +111,10 @@ public class CameraControllerMultiple : MonoBehaviour {
                 BackgroundRandom(renderBackground.GetComponent<Renderer>().sharedMaterial);
                 lt.color = Color.HSVToRGB(Random.value * 0.7f, Random.value * 0.5f, 1.0f - Random.value * 0.15f, true);
                 camPos = camVertices.get_random_vertice();
-                lookPos = camVertices.get_random_look_vertice();
+                if (camPos.y < 0.9f)
+                    lookPos = cloneObj[0].transform.position;
+                else
+                    lookPos = camVertices.get_random_look_vertice();
 
                 // Debug.Log("camPos =" + camPos);
                 renderCam.transform.position = camPos;
@@ -120,7 +123,7 @@ public class CameraControllerMultiple : MonoBehaviour {
 
                 //json_file = new JsonFile();
                 json_file.get_cam(renderCam);
-                json_file.get_obj(1, cloneObj, renderCam);
+                json_file.get_obj(objNumber, cloneObj, renderCam);
 
                 //json_file.get_file();
 
