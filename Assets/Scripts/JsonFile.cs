@@ -171,18 +171,23 @@ public class JsonFile
         {
             objects[i] = new Objects();
             cla = renderObj[i].name;
-            
+
             // l = renderCam.transform.position - renderObj[i].transform.position;
             l = renderCam.transform.TransformPoint(renderObj[i].transform.position) * 100.0f;
+            // l = renderCam.transform.position * 100.0f;
             cc = l;
             pcc = renderCam.GetComponent<Camera>().WorldToScreenPoint(renderObj[i].transform.position);
             pcc.y = 480 - (pcc.y - 960);
 
             q = renderObj[i].transform.rotation;
             ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
+            ptp.m30 = l.x;
+            ptp.m31 = l.y;
+            ptp.m32 = l.z;
             
-            cub = getOBBox(renderObj[i]);
-            pc = get2DOBBox(cub, renderCam);
+            cub = getOBBox(renderObj[i], renderCam);
+            Vector3[] cub_world = getOBBox(renderObj[i], renderObj[i]);
+            pc = get2DOBBox(cub_world, renderCam);
             bb = get2DBox(pc);
             
             vis = getvisibility(bb);
@@ -215,18 +220,18 @@ public class JsonFile
             maxy = 480.0f;
         return ((maxy - miny) * (maxx - minx) / area);
     }
-    Vector3[] getOBBox(GameObject g)
+    Vector3[] getOBBox(GameObject g, GameObject renderCam)
     {
         BoxCollider bc = g.GetComponent<BoxCollider>();
         Vector3[] pt = new Vector3[8];
-        pt[0] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[1] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[2] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[3] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[4] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-        pt[5] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-        pt[6] = g.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-        pt[7] = g.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[0] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[1] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[2] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[3] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
+        pt[4] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[5] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[6] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
+        pt[7] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
 
         return pt;
     }
