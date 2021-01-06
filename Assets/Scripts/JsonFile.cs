@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class JsonFile
 {
     public CameraData camera_data = new CameraData();
@@ -33,7 +31,7 @@ public class JsonFile
         public float visibility;
         public float[] location;                        // Vector3
         public float[] quaternion_xyzw;                 // Quaternion
-        public List<string> pose_transform_permuted;        // Matrix4x4         
+        public List<string> pose_transform_permuted;    // Matrix4x4         
         public float[] cuboid_centroid;                 // Vector3
         public float[] projected_cuboid_centroid;       // (x,y)
         public BoundingBox bounding_box;
@@ -157,40 +155,36 @@ public class JsonFile
     }
     public void get_obj(int n, GameObject[] renderObj, GameObject renderCam)
     {
-        //Debug.Log("obj length: " + objects.Length);
-        //Debug.Log("renderObj length: " + renderObj.Length);
-        string cla;
-        float vis = 1.0f;
-        Vector3 l;
-        Quaternion q;
-        Matrix4x4 ptp;
-        Vector3 cc;
-        Vector2 pcc;
-        BoundingBox bb;
-        Vector3[] cub;
-        Vector2[] pc;
+        string cla;             // class
+        float vis = 1.0f;       // visibility, occluded 
+        Vector3 l;              // object to cam location, XYZ position (in centimeters)
+        Quaternion q;           // object to cam orientation
+        Matrix4x4 ptp;          // 4x4 transformation, pose_transform_permuted
+        Vector3 cc;             // the same with l
+        Vector2 pcc;            // 2D projected cuboid centroid
+        BoundingBox bb;         // 2D bounding box
+        Vector3[] cub;          // 3D bounding cuboid (in centimeters)
+        Vector2[] pc;           // 2D projected bounding cuboid of the above
 
         objects = new Objects[n];
-
         for (int i = 0; i < n; i++)
         {
             objects[i] = new Objects();
             cla = renderObj[i].name;
-            // =========== object to cam location ==============
+            
             // l = renderCam.transform.position - renderObj[i].transform.position;
             l = renderCam.transform.TransformPoint(renderObj[i].transform.position) * 100.0f;
             cc = l;
-            // =========== object to cam rotation ==============
-            q = renderObj[i].transform.rotation;
-
-            ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
-
             pcc = renderCam.GetComponent<Camera>().WorldToScreenPoint(renderObj[i].transform.position);
             pcc.y = 480 - (pcc.y - 960);
 
+            q = renderObj[i].transform.rotation;
+            ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
+            
             cub = getOBBox(renderObj[i]);
             pc = get2DOBBox(cub, renderCam);
             bb = get2DBox(pc);
+            
             vis = getvisibility(bb);
 
             objects[i].setObjects(cla, vis, l, q, ptp, cc, pcc, bb, cub, pc);
