@@ -172,9 +172,14 @@ public class JsonFile
             objects[i] = new Objects();
             cla = renderObj[i].name;
 
-            // l = renderCam.transform.position - renderObj[i].transform.position;
-            l = renderCam.transform.TransformPoint(renderObj[i].transform.position) * 100.0f;
+            // l = (renderCam.transform.position - renderObj[i].transform.position) * 100.0f; //second try wrong
+            // l = renderCam.transform.TransformPoint(renderObj[i].transform.position) * 100.0f; //first try wrong
             // l = renderCam.transform.position * 100.0f;
+            l = renderCam.GetComponent<Camera>().WorldToViewportPoint(renderObj[i].transform.position);
+            l.z = l.z * 100.0f;
+            l.x = (l.x-0.5f) * l.z * renderCam.GetComponent<Camera>().aspect * Mathf.Tan(renderCam.GetComponent<Camera>().fieldOfView / 2);
+            l.y = (0.5f - l.y) * l.z * Mathf.Tan(renderCam.GetComponent<Camera>().fieldOfView / 2);
+
             cc = l;
             pcc = renderCam.GetComponent<Camera>().WorldToScreenPoint(renderObj[i].transform.position);
             pcc.y = 480 - (pcc.y - 960);
