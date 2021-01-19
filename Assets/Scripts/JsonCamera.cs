@@ -30,8 +30,8 @@ public class JsonCamera
             
             public IS()
             {
-                fx = 68.05538f;
-                fy = 68.05538f;
+                fx = 671.7691f;
+                fy = 671.7691f;
                 cx = 320;
                 cy = 240;
                 s = 0;
@@ -53,14 +53,14 @@ public class JsonCamera
         public CameraSettings()
         {
             name = "main";
-            horizontal_fov = 20;
+            horizontal_fov = 30;
             intrinsic_settings = new IS();
             captured_image_size = new CIS();
         }
         public void setCameraSettings()
         {
             name = "main";
-            horizontal_fov = 20;
+            horizontal_fov = 30;
             intrinsic_settings = new IS();
             captured_image_size = new CIS();
         }
