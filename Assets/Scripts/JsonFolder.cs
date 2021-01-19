@@ -32,6 +32,8 @@ public class JsonFolder
                 segmentation_class_id = 40;
             else if (_class == "M16_Hex_Nut(Clone)")
                 segmentation_class_id = 50;
+            else if (_class == "004_sugar_box_16k(Clone)")
+                segmentation_class_id = 10;
             else
                 segmentation_class_id = 0;
             fixed_model_transform = new List<string>();
@@ -40,7 +42,7 @@ public class JsonFolder
             fixed_model_transform.Add("remove[ 100, 0, 0, 0 ]remove");
             fixed_model_transform.Add("remove[ 0, 0, 0, 1 ]remove");
             BoxCollider bc = g.GetComponent<BoxCollider>();
-            Vector3 e = bc.bounds.extents;
+            Vector3 e = bc.size * 100.0f;                //bc.bounds.extents;
             cuboid_dimensions = new float[3] { e.x, e.y, e.z };
         }
         public void setExportedObjects(GameObject g)
@@ -57,6 +59,8 @@ public class JsonFolder
                 segmentation_class_id = 40;
             else if (_class == "M16_Hex_Nut")
                 segmentation_class_id = 50;
+            else if (_class == "004_sugar_box_16k(Clone)")
+                segmentation_class_id = 10;
             else
                 segmentation_class_id = 0;
             fixed_model_transform.Add("remove[ 0, 0, 100, 0 ]remove");
@@ -64,7 +68,7 @@ public class JsonFolder
             fixed_model_transform.Add("remove[ 100, 0, 0, 0 ]remove");
             fixed_model_transform.Add("remove[ 0, 0, 0, 1 ]remove");
             BoxCollider bc = g.GetComponent<BoxCollider>();
-            Vector3 e = bc.bounds.extents;
+            Vector3 e = bc.size * 100.0f;                //bc.bounds.extents;
             cuboid_dimensions = new float[3] { e.x, e.y, e.z };
         }
     }
