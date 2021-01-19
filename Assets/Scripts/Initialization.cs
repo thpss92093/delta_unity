@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Initialization : MonoBehaviour {
-
-	public GameObject[] desireModel;
+    public GameObject[] desireModel;
     
     // Use this for initialization
     void Start () {
@@ -20,8 +19,6 @@ public class Initialization : MonoBehaviour {
 	{
         for(int i = 0; i < desireModel.Length; i++)
         {
-            GetComponent<CameraController>().renderObj[i] = desireModel[i];
-
             DeleteAllComponents(desireModel[i]);
             GameObject label = GameObject.Instantiate(desireModel[i]);
             FollowRenderCam labFol = label.AddComponent<FollowRenderCam>() as FollowRenderCam;
