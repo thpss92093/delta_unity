@@ -29,6 +29,7 @@ public class CameraControllerMultiple : MonoBehaviour {
     public int maximumImage;
     public int imageCnt;
     public int objNumber;
+    public bool changeObjMaterial;
 
     // Use this for initialization
     void Start() {
@@ -101,12 +102,16 @@ public class CameraControllerMultiple : MonoBehaviour {
                 // get camera position
                 Vector3 camPos = Vector3.zero;
                 Vector3 lookPos = Vector3.zero;
-                for (i = 0; i < objNumber; i++)
+                if (changeObjMaterial)
                 {
-                    cloneObj[i].GetComponent<Renderer>().sharedMaterial = ObjColorRandom(10, 1);
-                    // drawAABBox(cloneObj[i]);
-                    // drawOBBox(cloneObj[i]);
+                    for (i = 0; i < objNumber; i++)
+                    {
+                        cloneObj[i].GetComponent<Renderer>().sharedMaterial = ObjColorRandom(10, 1);
+                        // drawAABBox(cloneObj[i]);
+                        // drawOBBox(cloneObj[i]);
+                    }
                 }
+                
                 //ObjPoseRandom();
                 BackgroundRandom(renderBackground.GetComponent<Renderer>().sharedMaterial);
                 lt.color = Color.HSVToRGB(Random.value * 0.7f, Random.value * 0.5f, 1.0f - Random.value * 0.15f, true);
