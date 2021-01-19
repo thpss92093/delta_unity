@@ -7,8 +7,10 @@ using UnityEngine;
 
 public class JsonCamera
 {
-    public CameraSettings camera_settings = new CameraSettings();
-   
+    // public CameraSettings camera_settings = new CameraSettings();
+    public CameraSettings[] camera_settings;
+    
+
     [Serializable]
     public class CameraSettings
     {
@@ -62,6 +64,11 @@ public class JsonCamera
             intrinsic_settings = new IS();
             captured_image_size = new CIS();
         }
+    }
+    public JsonCamera()
+    {
+        camera_settings = new CameraSettings[1];
+        camera_settings[0] = new CameraSettings();
     }
     
 }
