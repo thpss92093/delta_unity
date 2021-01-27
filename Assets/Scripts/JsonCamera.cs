@@ -30,8 +30,9 @@ public class JsonCamera
             
             public IS()
             {
-                fx = 671.7691f;
-                fy = 671.7691f;
+                // focal_pixel = (image_width_in_pixels * 0.5) / tan(FOV * 0.5 * PI/180)
+                fx = (640.0f * 0.5f) / Mathf.Tan(30.0f * 0.5f * (float)Math.PI / 180.0f);
+                fy = fx;
                 cx = 320;
                 cy = 240;
                 s = 0;
