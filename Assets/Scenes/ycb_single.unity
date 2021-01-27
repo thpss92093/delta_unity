@@ -1005,9 +1005,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2034586856}
+  - {fileID: 1567370500}
   - {fileID: 2101648338}
   - {fileID: 402787253}
-  - {fileID: 1567370500}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1037,17 +1037,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f54d1aeb7aad704a9871c70bea58a37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeForEachPics: 0.2
+  timeForEachPics: 2
   camVertices: {fileID: 1530387151}
   renderCam: {fileID: 2034586852}
   renderObj:
   - {fileID: 1254023005}
   renderBackground: {fileID: 1813816721}
   lt: {fileID: 776960447}
-  folderName: ycb
-  maximumScene: 100
-  sceneCnt: 43
-  maximumImage: 30
+  folderName: ycb_test
+  maximumScene: 10
+  sceneCnt: 0
+  maximumImage: 10
   imageCnt: 0
   objNumber: 1
   changeObjMaterial: 0
@@ -2792,7 +2792,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1.0000002}
   m_Children: []
   m_Father: {fileID: 160925553}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!114 &402787254
 MonoBehaviour:
@@ -2828,19 +2828,19 @@ Camera:
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
-  m_FOVAxisMode: 0
+  m_FOVAxisMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 68.05538
+  m_FocalLength: 67.17691
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
     y: 0.33333334
     width: 1
     height: 0.33333334
-  near clip plane: 0.3
-  far clip plane: 2
-  field of view: 20
+  near clip plane: 0.1
+  far clip plane: 3
+  field of view: 20.25616
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -3318,7 +3318,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.028828492
+      value: -0.002
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
@@ -3328,7 +3328,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0861243
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
@@ -3338,12 +3338,12 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: afc4b873510785748ad8a983823d8706,
         type: 3}
@@ -5154,7 +5154,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071077642}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.389, z: 0}
+  m_LocalPosition: {x: -0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -26043,10 +26043,10 @@ Transform:
   m_GameObject: {fileID: 1567370499}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0.8, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1.0000002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 160925553}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!114 &1567370501
 MonoBehaviour:
@@ -26082,19 +26082,19 @@ Camera:
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
-  m_FOVAxisMode: 0
+  m_FOVAxisMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 68.05538
+  m_FocalLength: 67.17691
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
     y: 0.33333334
     width: 1
     height: 0.33333334
-  near clip plane: 0.2
-  far clip plane: 2.7
-  field of view: 20
+  near clip plane: 0.1
+  far clip plane: 3
+  field of view: 20.25616
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -28227,19 +28227,19 @@ Camera:
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
-  m_FOVAxisMode: 0
+  m_FOVAxisMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 68.05538
+  m_FocalLength: 67.1769
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
     y: 0.6666667
     width: 1
     height: 0.33333334
-  near clip plane: 0.2
-  far clip plane: 2.7
-  field of view: 20
+  near clip plane: 0.1
+  far clip plane: 3
+  field of view: 20.256163
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -28559,7 +28559,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh13454
+  m_Name: pb_Mesh14264
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -29250,7 +29250,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1.0000002}
   m_Children: []
   m_Father: {fileID: 160925553}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
 --- !u!114 &2101648339
 MonoBehaviour:
@@ -29299,19 +29299,19 @@ Camera:
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 2
   m_GateFitMode: 2
-  m_FOVAxisMode: 0
+  m_FOVAxisMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 68.05538
+  m_FocalLength: 67.17691
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
     y: 0
     width: 1
     height: 0.33333334
-  near clip plane: 0.2
-  far clip plane: 2.7
-  field of view: 20
+  near clip plane: 0.1
+  far clip plane: 3
+  field of view: 20.25616
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
