@@ -172,20 +172,24 @@ public class JsonFile
             objects[i] = new Objects();
             cla = renderObj[i].name;
 
-            // l = (renderCam.transform.position - renderObj[i].transform.position) * 100.0f; //second try wrong
-            // l = renderCam.transform.TransformPoint(renderObj[i].transform.position) * 100.0f; //first try wrong
-            // l = renderCam.transform.position * 100.0f;
-            l = renderCam.GetComponent<Camera>().WorldToViewportPoint(renderObj[i].transform.position);
-            l.z = l.z * 100.0f;
-            l.x = (l.x-0.5f) * l.z * renderCam.GetComponent<Camera>().aspect * Mathf.Tan(renderCam.GetComponent<Camera>().fieldOfView / 2);
-            l.y = (0.5f - l.y) * l.z * Mathf.Tan(renderCam.GetComponent<Camera>().fieldOfView / 2);
-
+            l = getViewportlacation(renderObj[i].transform.position, renderCam);
+            
             cc = l;
             pcc = renderCam.GetComponent<Camera>().WorldToScreenPoint(renderObj[i].transform.position);
             pcc.y = 480 - (pcc.y - 960);
+            BoxCollider bc = renderObj[i].GetComponent<BoxCollider>();
+            Vector3 ltr = renderObj[i].transform.TransformPoint(bc.center + new Vector3(0.1f, -0.1f, 0.1f));
+            Debug.DrawLine(renderObj[i].transform.position, ltr, Color.red, 2.0f);
+            Vector3 l2 = getViewportlacation(ltr, renderCam);
+            
+            Quaternion q2;
+            //q = Quaternion.LookRotation(new Vector3(1.0f, 1.0f, 1.0f), new Vector3(-1.0f, -1.0f, -1.0f));
+            //q2 = Quaternion.FromToRotation(new Vector3(1.0f, 1.0f, 1.0f), new Vector3(-1.0f, -1.0f, -1.0f));
+            q = Quaternion.FromToRotation(Vector3.Normalize(new Vector3(1.0f, 1.0f, 1.0f)), Vector3.Normalize(l2 - l));
 
-            q = renderObj[i].transform.rotation;
-            ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
+
+            // ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
+            ptp = Matrix4x4.Rotate(q);
             ptp.m30 = l.x;
             ptp.m31 = l.y;
             ptp.m32 = l.z;
@@ -224,6 +228,25 @@ public class JsonFile
         if (maxy > 480.0f)
             maxy = 480.0f;
         return ((maxy - miny) * (maxx - minx) / area);
+    }
+    Vector3 getViewportlacation(Vector3 worldLocatoion, GameObject renderCam)
+    {
+        Vector3 l;
+        float fov = renderCam.GetComponent<Camera>().fieldOfView;
+        float tan = Mathf.Tan((fov / 2.0f) * (float)Math.PI / 180.0f);
+
+        l = renderCam.GetComponent<Camera>().WorldToViewportPoint(worldLocatoion);
+
+        var extent = renderCam.GetComponent<Camera>().ViewportToScreenPoint(l);
+        extent.y = extent.y - 960;
+        Debug.Log("extent: " + extent);
+        
+        l.z = l.z * 100.0f;
+        l.x = (l.x - 0.5f) * 2.0f * l.z * renderCam.GetComponent<Camera>().aspect * tan;
+        l.y = (0.5f - l.y) * 2.0f * l.z * tan;
+        Debug.Log("l: " + l.ToString("f3"));
+
+        return l;
     }
     Vector3[] getOBBox(GameObject g, GameObject renderCam)
     {
