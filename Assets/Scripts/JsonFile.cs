@@ -182,15 +182,14 @@ public class JsonFile
             Quaternion q_temp =  Quaternion.Inverse(renderCam.transform.rotation) * renderObj[i].transform.rotation;
             q = Quaternion.Euler(q_temp.eulerAngles.x, q_temp.eulerAngles.y + 180, q_temp.eulerAngles.z);
             
-
-            // ptp = Matrix4x4.Rotate(renderObj[i].transform.rotation);
+            
             ptp = Matrix4x4.Rotate(q);
             ptp.m30 = l.x;
             ptp.m31 = l.y;
             ptp.m32 = l.z;
             
-            cub = getOBBox(renderObj[i], renderCam);
             Vector3[] cub_world = getOBBox(renderObj[i], renderObj[i]);
+            cub = getOBBox_test(cub_world, renderCam);
             pc = get2DOBBox(cub_world, renderCam);
             bb = get2DBox(pc);
             
@@ -229,42 +228,53 @@ public class JsonFile
         Vector3 l;
         float fov = renderCam.GetComponent<Camera>().fieldOfView;
         float tan = Mathf.Tan((fov / 2.0f) * (float)Math.PI / 180.0f);
-
+        float fov_h = 30.0f;
+        float tan_h = Mathf.Tan((fov_h / 2.0f) * (float)Math.PI / 180.0f);
+        
         l = renderCam.GetComponent<Camera>().WorldToViewportPoint(worldLocatoion);
-        //Debug.Log("WorldToViewportPoint: " + l.ToString("f4"));
-
-        var extent = renderCam.GetComponent<Camera>().ViewportToScreenPoint(l);
-        extent.y = extent.y - 960;
-
         l.z = l.z * 100.0f;
-        l.x = (l.x - 0.5f) * 2.0f * l.z * renderCam.GetComponent<Camera>().aspect * tan;
+        l.x = (l.x - 0.5f) * 2.0f * l.z * tan_h;
         l.y = (0.5f - l.y) * 2.0f * l.z * tan;
         
+        
         return l;
+    }
+    Vector3[] getOBBox_test(Vector3[] v3, GameObject renderCam)
+    {
+        Vector3[] pt = new Vector3[8];
+        pt[0] = getViewportlacation(v3[0], renderCam);
+        pt[1] = getViewportlacation(v3[1], renderCam);
+        pt[2] = getViewportlacation(v3[2], renderCam);
+        pt[3] = getViewportlacation(v3[3], renderCam);
+        pt[4] = getViewportlacation(v3[4], renderCam);
+        pt[5] = getViewportlacation(v3[5], renderCam);
+        pt[6] = getViewportlacation(v3[6], renderCam);
+        pt[7] = getViewportlacation(v3[7], renderCam);
+
+        return pt;
     }
 
     Vector3[] getOBBox(GameObject g, GameObject renderCam)
     {
         BoxCollider bc = g.GetComponent<BoxCollider>();
         Vector3[] pt = new Vector3[8];
-        pt[0] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[1] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[2] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[3] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, bc.size.z) * 0.5f) * 100.0f;
-        pt[4] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-        pt[5] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-        pt[6] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-        pt[7] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, -bc.size.z) * 0.5f) * 100.0f;
-
+        pt[0] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, bc.size.z) * 0.5f);
+        pt[1] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, bc.size.z) * 0.5f);
+        pt[2] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, bc.size.z) * 0.5f);
+        pt[3] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, bc.size.z) * 0.5f);
+        pt[4] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, -bc.size.y, -bc.size.z) * 0.5f);
+        pt[5] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, -bc.size.y, -bc.size.z) * 0.5f);
+        pt[6] = renderCam.transform.TransformPoint(bc.center + new Vector3(-bc.size.x, bc.size.y, -bc.size.z) * 0.5f);
+        pt[7] = renderCam.transform.TransformPoint(bc.center + new Vector3(bc.size.x, bc.size.y, -bc.size.z) * 0.5f);
+        
         return pt;
     }
     Vector2[] get2DOBBox(Vector3[] v3, GameObject renderCam)
     {
         Vector2[] v2 = new Vector2[8];
-        // Vector2 pos = RectTransformUtility.WorldToScreenPoint(Camera.main, target.transform.position);
         for (int i = 0; i < v3.Length; i++)
         {
-            v2[i] = renderCam.GetComponent<Camera>().WorldToScreenPoint(v3[i] / 100.0f);
+            v2[i] = renderCam.GetComponent<Camera>().WorldToScreenPoint(v3[i]);
             v2[i].y = 480 - (v2[i].y - 960);
         }
         return v2;
