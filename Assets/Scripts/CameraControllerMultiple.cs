@@ -80,9 +80,19 @@ public class CameraControllerMultiple : MonoBehaviour {
                 clone_id = Random.Range(0, renderObj.Length);
                 cloneObj[i] = (GameObject)Instantiate(renderObj[clone_id], new Vector3(0.0f, 0.2f, 0.0f), Random.rotation);
                 objectController = cloneObj[i].GetComponent<ObjectController>();
+                /////////////////MOVE//////////////////
+                //cloneObj[i].transform.position = new Vector3(0.05f, 0.25f, 0.05f);
+                //cloneObj[i].transform.rotation = new Quaternion(-0.7071068f, 0.0f, 0.0f, 0.7071068f);
+                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.7071068f, 0.7071068f, 0.0f);
+                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f); //0, 0, 0
+                //cloneObj[i].transform.rotation = new Quaternion(0.7071068f, 0.0f, 0.0f, 0.7071068f); //90, 0, 0
+                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.7071068f, 0.0f, 0.7071068f); //0, 90, 0
+                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.0f, 0.7071068f, 0.7071068f); //0, 0, 90
+
+
                 objectController.Place();
                 cloneObj_label[i] = Objclone_label(cloneObj[i], clone_id);
-                yield return new WaitForSeconds(1.0f);
+                yield return new WaitForSeconds(0.5f);
             }
 
             string sceneName = "Images/" + folderName + "/Scene" + sceneCnt + "/";
@@ -122,9 +132,10 @@ public class CameraControllerMultiple : MonoBehaviour {
                     lookPos = camVertices.get_random_look_vertice();
 
                 // Debug.Log("camPos =" + camPos);
+                ////////////////////MOVE//////////////////////////
                 renderCam.transform.position = camPos;
                 renderCam.transform.LookAt(lookPos);   // set camera look at the object
-
+                
 
                 //json_file = new JsonFile();
                 json_file.get_cam(renderCam);
@@ -146,7 +157,8 @@ public class CameraControllerMultiple : MonoBehaviour {
 
                 imageCnt++;
                 yield return new WaitForSeconds(0.2f);
-                
+                // yield return new WaitForSeconds(5.2f);
+
             }
             for (i = 0; i < objNumber; i++)
             {
