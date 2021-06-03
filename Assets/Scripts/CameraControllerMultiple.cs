@@ -16,11 +16,16 @@ public class CameraControllerMultiple : MonoBehaviour {
 
     // link corresponding camera and object;
     public GameObject renderCam;
+    public float camRange_x, camRange_y_low, camRange_y, camRange_z;
     public GameObject[] renderObj;
-    public GameObject renderBackground;
-    ObjectController objectController;
-    public Light lt;
     
+    ObjectController objectController;
+    public bool changeBackground;
+    public GameObject renderBackground;
+
+    public bool changeLight;
+    public Light lt;
+
     string dataPath;
 
     public string folderName;
@@ -29,7 +34,9 @@ public class CameraControllerMultiple : MonoBehaviour {
     public int maximumImage;
     public int imageCnt;
     public int objNumber;
-    public bool changeObjMaterial;
+    public enum ObjMaterial { NoChange, Random, Matel };
+    public ObjMaterial changeObjMaterial;
+    //public bool changeObjMaterial;
 
     // Use this for initialization
     void Start() {
@@ -73,29 +80,36 @@ public class CameraControllerMultiple : MonoBehaviour {
             cloneObj = new GameObject[objNumber];
             cloneObj_label = new GameObject[objNumber];
             JsonFile json_file = new JsonFile(objNumber);
-            
+            string sceneName = "Images/";
 
-            for (i = 0; i < objNumber; i++)
+            if (objNumber == 1)
             {
-                clone_id = Random.Range(0, renderObj.Length);
-                cloneObj[i] = (GameObject)Instantiate(renderObj[clone_id], new Vector3(0.0f, 0.2f, 0.0f), Random.rotation);
-                objectController = cloneObj[i].GetComponent<ObjectController>();
-                /////////////////MOVE//////////////////
-                //cloneObj[i].transform.position = new Vector3(0.05f, 0.25f, 0.05f);
-                //cloneObj[i].transform.rotation = new Quaternion(-0.7071068f, 0.0f, 0.0f, 0.7071068f);
-                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.7071068f, 0.7071068f, 0.0f);
-                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f); //0, 0, 0
-                //cloneObj[i].transform.rotation = new Quaternion(0.7071068f, 0.0f, 0.0f, 0.7071068f); //90, 0, 0
-                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.7071068f, 0.0f, 0.7071068f); //0, 90, 0
-                //cloneObj[i].transform.rotation = new Quaternion(0.0f, 0.0f, 0.7071068f, 0.7071068f); //0, 0, 90
-
+                clone_id = sceneCnt % renderObj.Length;
+                cloneObj[0] = (GameObject)Instantiate(renderObj[clone_id], new Vector3(0.0f, 0.2f, 0.0f), Random.rotation);
+                objectController = cloneObj[0].GetComponent<ObjectController>();
 
                 objectController.Place();
-                cloneObj_label[i] = Objclone_label(cloneObj[i], clone_id);
+                cloneObj_label[0] = Objclone_label(cloneObj[0], clone_id);
                 yield return new WaitForSeconds(0.5f);
+
+                sceneName = "Images/" + folderName + "/" + clone_id + "_" + renderObj[clone_id].name + "/Scene" + (sceneCnt / renderObj.Length) + "/";
             }
 
-            string sceneName = "Images/" + folderName + "/Scene" + sceneCnt + "/";
+            else
+            {
+                for (i = 0; i < objNumber; i++)
+                {
+                    clone_id = Random.Range(0, renderObj.Length);
+                    cloneObj[i] = (GameObject)Instantiate(renderObj[clone_id], new Vector3(0.0f, 0.2f, 0.0f), Random.rotation);
+                    objectController = cloneObj[i].GetComponent<ObjectController>();
+                
+                    objectController.Place();
+                    cloneObj_label[i] = Objclone_label(cloneObj[i], clone_id);
+                    yield return new WaitForSeconds(0.5f);
+                }
+                sceneName = "Images/" + folderName + "/Scene" + sceneCnt + "/";
+            }
+
             System.IO.Directory.CreateDirectory(sceneName);
             JsonCamera jc = new JsonCamera();
             string jc_newconvertToJson = fixjson(JsonUtility.ToJson(jc, true));
@@ -104,50 +118,70 @@ public class CameraControllerMultiple : MonoBehaviour {
             string jf_newconvertToJson = fixjson(JsonUtility.ToJson(jf, true));
             System.IO.File.WriteAllText(sceneName + "_object_settings.json", jf_newconvertToJson);
 
-            //string sceneName = "Images/Scene" + sceneCnt + "_";
-
 
             while (imageCnt < maximumImage)
             {
                 // get camera position
                 Vector3 camPos = Vector3.zero;
                 Vector3 lookPos = Vector3.zero;
-                if (changeObjMaterial)
+                switch(changeObjMaterial)
                 {
-                    for (i = 0; i < objNumber; i++)
-                    {
-                        cloneObj[i].GetComponent<Renderer>().sharedMaterial = ObjColorRandom(10, 1);
-                        // drawAABBox(cloneObj[i]);
-                        // drawOBBox(cloneObj[i]);
-                    }
+                    case ObjMaterial.NoChange:
+                        break;
+                    case ObjMaterial.Random:
+                        for (i = 0; i < objNumber; i++)
+                        {
+                            int arraylength = cloneObj[i].GetComponent<Renderer>().sharedMaterials.Length;
+                            Material[] material_array = cloneObj[i].GetComponent<Renderer>().sharedMaterials;
+                            // Debug.Log("arraylength: " + arraylength.ToString());
+                            for (int j = 0; j < arraylength; j++)
+                            {
+                                // Debug.Log(j.ToString() + "material name: " + material_array[j].name.ToString());
+                                if (material_array[j].name != "transparent")
+                                    material_array[j] = ObjColorRandom(10, 3);
+
+                            }
+                            cloneObj[i].GetComponent<Renderer>().sharedMaterials = material_array;
+                            //cloneObj[i].GetComponent<Renderer>().sharedMaterial = ObjColorRandom(10, 3);
+
+                        }
+                        break;
+                    case ObjMaterial.Matel:
+                        for (i = 0; i < objNumber; i++)
+                        {
+                            cloneObj[i].GetComponent<Renderer>().sharedMaterial = MetalMaterial();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                // drawAABBox(cloneObj[i]);
+                // drawOBBox(cloneObj[i]);
+                // ObjPoseRandom();
+                if (changeBackground) 
+                    BackgroundRandom(renderBackground.GetComponent<Renderer>().sharedMaterial);
+
+                if (changeLight)
+                {
+                    // h: 0~1, s: 0~0.7, v: 0.85~1
+                    lt.color = Color.HSVToRGB(Random.value, Random.value * 0.7f, 1.0f - Random.value * 0.15f, true);
+                    lt.transform.position = new Vector3(Random.Range(-0.3f, 0.3f), 3.0f, Random.Range(-0.3f, 0.3f));
+                    lt.transform.rotation = Quaternion.Euler(Random.Range(60.0f, 120.0f), Random.Range(-30.0f, 30.0f), 0.0f);
                 }
                 
-                //ObjPoseRandom();
-                BackgroundRandom(renderBackground.GetComponent<Renderer>().sharedMaterial);
-                lt.color = Color.HSVToRGB(Random.value * 0.7f, Random.value * 0.5f, 1.0f - Random.value * 0.15f, true);
-                camPos = camVertices.get_random_vertice();
-                if (camPos.y < 0.9f)
-                    lookPos = cloneObj[0].transform.position;
-                else
-                    lookPos = camVertices.get_random_look_vertice();
-
-                // Debug.Log("camPos =" + camPos);
-                ////////////////////MOVE//////////////////////////
+                camPos = camVertices.get_random_location(camRange_x, camRange_y_low, camRange_y, camRange_z);
+                lookPos = cloneObj[0].transform.position;
+                lookPos = new Vector3(lookPos.x + (Random.value * 0.08f - 0.04f), lookPos.y, lookPos.z + (Random.value * 0.08f - 0.04f));
+                                
                 renderCam.transform.position = camPos;
                 renderCam.transform.LookAt(lookPos);   // set camera look at the object
                 
-
-                //json_file = new JsonFile();
                 json_file.get_cam(renderCam);
                 json_file.get_obj(objNumber, cloneObj, renderCam);
-
-                //json_file.get_file();
-
-                //json_file.get_obj(objNumber, cloneObj, renderCam);
+                
                 string convertToJson = JsonUtility.ToJson(json_file, true);
                 string newconvertToJson = fixjson(convertToJson);
-
-                //Debug.Log(convertToJson);
+                
                 System.IO.File.WriteAllText( sceneName + imageCnt + ".main.json", newconvertToJson);
 
                 // capture the screenshot;
@@ -310,10 +344,31 @@ public class CameraControllerMultiple : MonoBehaviour {
         {
             obj_material.color = Color.HSVToRGB(Random.value * 0.15f + 0.25f, Random.value * 0.5f + 0.5f, Random.value * 0.5f + 0.5f, true);
         }
+        else if (m == 3)
+        {
+            obj_material.color = Color.HSVToRGB(Random.value, Random.value, Random.value, true);
+        }
 
         return obj_material;
 
         // Debug.Log("chang obj color = " + renderObj.GetComponent<Renderer>().material.color);
+    }
+    private Material MetalMaterial()
+    {
+        // Material obj_material = new Material(Shader.Find("Specular"));
+        Material obj_material = new Material(Shader.Find("Standard"));
+
+        obj_material.SetFloat("_Metallic", Random.value * 0.3f + 0.7f);
+        obj_material.SetFloat("_Glossiness", Random.value * 0.3f + 0.7f);
+        obj_material.SetFloat("_SpecularHighlights", 1.0f);
+        obj_material.SetFloat("_GlossyReflections", 1.0f);
+        obj_material.mainTexture = null;
+        // h: 0~1  s: 0~0.4  v: 0.5~1
+        //obj_material.color = Color.HSVToRGB(Random.value, Random.value * 0.6f, 1.0f - Random.value * 0.25f, true);
+        obj_material.color = Color.HSVToRGB(Random.value, Random.value * 0.15f, 1.0f - Random.value * 0.15f, true);
+
+
+        return obj_material;
     }
 
     private void BackgroundRandom(Material bg_material)
@@ -338,7 +393,6 @@ public class CameraControllerMultiple : MonoBehaviour {
             renderObj[i].transform.position = new Vector3(Random.Range(-0.1f, 0.1f), 0.008f, Random.Range(-0.1f, 0.1f));
             renderObj[i].transform.eulerAngles = new Vector3(0, Random.value * 360.0f, 0);
         }
-        // Debug.Log("chang obj color = " + renderObj.GetComponent<Renderer>().material.color);
     }
 
     private GameObject Objclone_label(GameObject obj, int id)
@@ -355,12 +409,21 @@ public class CameraControllerMultiple : MonoBehaviour {
         FollowRenderCam labFol = labelClone.AddComponent<FollowRenderCam>() as FollowRenderCam;
         labelClone.GetComponent<FollowRenderCam>().cam = obj;
         
-        string label_matname = "Materials/Seg_" + (id + 1).ToString();
+        string label_matname = "Materials/seg_material/Seg_" + (id + 1).ToString();
+        // Debug.Log("label_matname: " + label_matname.ToString());
         Material labelMaterial = Resources.Load<Material>(label_matname);
-        labelClone.GetComponent<Renderer>().sharedMaterial = labelMaterial;
+               
+        int arraylength = obj.GetComponent<Renderer>().sharedMaterials.Length;
+        // Debug.Log("arraylength: " + arraylength.ToString());
+        Material[] labelMaterialarray = obj.GetComponent<Renderer>().sharedMaterials;
+        for (int i = 0; i < arraylength; i++)
+        {
+            labelMaterialarray[i] = labelMaterial;
+        }
+        labelClone.GetComponent<Renderer>().sharedMaterials = labelMaterialarray;
         labelClone.name = obj.name + "_label";
         labelClone.layer = 9;
-
+        
         return labelClone;
     }
 

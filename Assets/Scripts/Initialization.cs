@@ -28,6 +28,7 @@ public class Initialization : MonoBehaviour {
 
             Rigidbody rb = desireModel[i].AddComponent<Rigidbody>() as Rigidbody;
             MeshCollider mc = desireModel[i].AddComponent<MeshCollider>() as MeshCollider;
+            BoxCollider bc = desireModel[i].AddComponent<BoxCollider>() as BoxCollider;
             mc.convex = true;
             ObjectController oc = desireModel[i].AddComponent<ObjectController>() as ObjectController;
             oc.pushForce = 3.5f;

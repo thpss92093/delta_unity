@@ -181,8 +181,7 @@ public class JsonFile
 
             Quaternion q_temp =  Quaternion.Inverse(renderCam.transform.rotation) * renderObj[i].transform.rotation;
             q = Quaternion.Euler(q_temp.eulerAngles.x, q_temp.eulerAngles.y + 180, q_temp.eulerAngles.z);
-            
-            
+ 
             ptp = Matrix4x4.Rotate(q);
             ptp.m30 = l.x;
             ptp.m31 = l.y;

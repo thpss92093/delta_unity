@@ -56,7 +56,7 @@ public class ObjectController : MonoBehaviour {
     {
         //obj: face_2 rotation_5 position_1    cam: rotation_15 height_3 angle_3
         //position 1
-        transform.position = new Vector3(Random.Range(-100.0f, 100.0f) * 0.001f, 0.2f, Random.Range(-100.0f, 100.0f) * 0.001f);
+        transform.position = new Vector3(Random.Range(-150.0f, 150.0f) * 0.001f, 0.2f, Random.Range(-150.0f, 150.0f) * 0.001f);
         // Debug.Log("transform.position = " + transform.position.ToString("f4"));
         //Debug.Log("eulerAngles = " + transform.eulerAngles);
         isMoving = true;
@@ -64,7 +64,7 @@ public class ObjectController : MonoBehaviour {
 
     public void Place_away()
     {
-        transform.position = new Vector3(1.0f, 0.1f, 2.0f);
+        transform.position = new Vector3(3.0f, 0.1f, 3.0f);
     }
 
     public void Reset()

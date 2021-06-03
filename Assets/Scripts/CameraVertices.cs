@@ -49,10 +49,19 @@ public class CameraVertices : MonoBehaviour {
     {
         Vector3 v = verticesList[(int)(Random.value * verticesList.Count)]; //?????(int)(Random.value * verticesList.Count)????
        
-        v.y = 0.5f + Random.value * 1.7f;
+        v.y = 0.2f + Random.value * 1.4f;
         v.x = Random.Range(-0.7f, 0.7f);
         v.z = Random.Range(-0.7f, 0.7f);
 
+        return v;
+    }
+    public Vector3 get_random_location(float x_range, float y_range_low, float y_range, float z_range)
+    {
+        Vector3 v = Vector3.zero;
+
+        v.y = y_range_low + Random.value * y_range;
+        v.x = Random.Range(-x_range, x_range);
+        v.z = Random.Range(-z_range, z_range);
 
         return v;
     }

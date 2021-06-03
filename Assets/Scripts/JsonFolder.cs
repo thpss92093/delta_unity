@@ -32,7 +32,41 @@ public class JsonFolder
                 segmentation_class_id = 40;
             else if (_class == "M16_Hex_Nut(Clone)")
                 segmentation_class_id = 50;
+            else if (_class == "RJ45_Female(Clone)")
+                segmentation_class_id = 60;
+            else if (_class == "RJ45_Male(Clone)")
+                segmentation_class_id = 70;
+            else if (_class == "USB_Male(Clone)")
+                segmentation_class_id = 80;
+            else if (_class == "BNC_Male(Clone)")
+                segmentation_class_id = 90;
+            else if (_class == "Gear_Medium(Clone)")
+                segmentation_class_id = 100;
+            else if (_class == "Gear_Small(Clone)")
+                segmentation_class_id = 110;
+            else if (_class == "Timing_Pulley_Large(Clone)")
+                segmentation_class_id = 120;
+            else if (_class == "Timing_Pulley_Small(Clone)")
+                segmentation_class_id = 130;
+            else if (_class == "Round_Pulley_Large(Clone)")
+                segmentation_class_id = 140;
+            else if (_class == "Round_Pulley_Small(Clone)")
+                segmentation_class_id = 150;
+            else if (_class == "Sprocket_Large(Clone)")
+                segmentation_class_id = 160;
+            else if (_class == "Sprocket_Small(Clone)")
+                segmentation_class_id = 170;
+            else if (_class == "Wire_Clip_Large(Clone)")
+                segmentation_class_id = 180;
+            else if (_class == "Wire_Clip_Small(Clone)")
+                segmentation_class_id = 190;
+            else if (_class == "Stereo_Plug(Clone)")
+                segmentation_class_id = 200;
             else if (_class == "004_sugar_box_16k(Clone)")
+                segmentation_class_id = 10;
+            else if (_class == "cup(Clone)")
+                segmentation_class_id = 10;
+            else if (_class == "pin(Clone)")
                 segmentation_class_id = 10;
             else
                 segmentation_class_id = 0;
@@ -49,17 +83,51 @@ public class JsonFolder
         {
             _class = g.name;
 
-            if(_class == "Gear_Large")
+            if(_class == "Gear_Large(Clone)")
                 segmentation_class_id = 10;
-            else if (_class == "Waterproof_Female")
+            else if (_class == "Waterproof_Female(Clone)")
                 segmentation_class_id = 20;
-            else if(_class == "DSUB_Female")
+            else if(_class == "DSUB_Female(Clone)")
                 segmentation_class_id = 30;
-            else if(_class == "M16_Screw")
+            else if(_class == "M16_Screw(Clone)")
                 segmentation_class_id = 40;
-            else if (_class == "M16_Hex_Nut")
+            else if (_class == "M16_Hex_Nut(Clone)")
                 segmentation_class_id = 50;
+            else if (_class == "RJ45_Female(Clone)")
+                segmentation_class_id = 60;
+            else if (_class == "RJ45_Male(Clone)")
+                segmentation_class_id = 70;
+            else if (_class == "USB_Male(Clone)")
+                segmentation_class_id = 80;
+            else if (_class == "BNC_Male(Clone)")
+                segmentation_class_id = 90;
+            else if (_class == "Gear_Medium(Clone)")
+                segmentation_class_id = 100;
+            else if (_class == "Gear_Small(Clone)")
+                segmentation_class_id = 110;
+            else if (_class == "Timing_Pulley_Large(Clone)")
+                segmentation_class_id = 120;
+            else if (_class == "Timing_Pulley_Small(Clone)")
+                segmentation_class_id = 130;
+            else if (_class == "Round_Pulley_Large(Clone)")
+                segmentation_class_id = 140;
+            else if (_class == "Round_Pulley_Small(Clone)")
+                segmentation_class_id = 150;
+            else if (_class == "Sprocket_Large(Clone)")
+                segmentation_class_id = 160;
+            else if (_class == "Sprocket_Small(Clone)")
+                segmentation_class_id = 170;
+            else if (_class == "Wire_Clip_Large(Clone)")
+                segmentation_class_id = 180;
+            else if (_class == "Wire_Clip_Small(Clone)")
+                segmentation_class_id = 190;
+            else if (_class == "Stereo_Plug(Clone)")
+                segmentation_class_id = 200;
             else if (_class == "004_sugar_box_16k(Clone)")
+                segmentation_class_id = 10;
+            else if (_class == "cup(Clone)")
+                segmentation_class_id = 10;
+            else if (_class == "pin(Clone)")
                 segmentation_class_id = 10;
             else
                 segmentation_class_id = 0;
